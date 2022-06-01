@@ -41,6 +41,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     InitGraphic(hWnd, 0, 0, 480, 800);       //그래픽 초기화
     Time::Init();                               //델타 타임 초기화
 
+    ObjectManager::Instantiate(new GameBG(0, 0));
+    ObjectManager::Instantiate(new Player(210, 550));
+    ObjectManager::Instantiate(new Laser(210, 550));
 
     MSG msg;
 
@@ -106,13 +109,21 @@ HWND InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
 
+   //윈도우 크기 조정 - AdjustWindowRect
+   RECT rt = {0,0,480,800};
+
+   AdjustWindowRect(&rt, (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX), FALSE);
+
+   int width = rt.right - rt.left;
+   int height = rt.bottom - rt.top;
+
    HWND hWnd = CreateWindowW(szWindowClass, 
                              szTitle, 
-                             WS_OVERLAPPEDWINDOW,
-                             CW_USEDEFAULT, 
-                             0, 
-                             CW_USEDEFAULT, 
-                             0, 
+                             (WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX),
+                             CW_USEDEFAULT,  
+                             0,
+                             width,       //윈도우 가로 크기
+                             height,       //윈도우 세로 크기
                              nullptr, 
                              nullptr, 
                              hInstance, 
